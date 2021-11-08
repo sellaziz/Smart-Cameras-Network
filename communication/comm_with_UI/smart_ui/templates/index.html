@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Flask-SocketIO Test</title>
+    <!-- <link rel="stylesheet" href="./style.css"> -->
+    <style>
+        table, th, td {
+        border: 2px solid black;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.on('connect', function() {
+            console.log('my_event')
+            socket.emit('my_event', {data: 'I\'m connected!'});
+        });
+        socket.on('my_response', function(msg, cb) {
+           console.log('response received')
+           console.log(msg.count + ': ' + msg.data);
+           if (cb)
+           cb();
+        });
+        socket.on('update_predictions', function(msg, cb) {
+            console.log('response received2', msg.id,  msg.prediction)
+            if (cb)
+                cb();
+            var table = document.getElementById('test')
+            table.rows[parseInt(msg.id,10)+1].cells[0].innerHTML = msg.prediction;
+            table.rows[parseInt(msg.id,10)+1].cells[1].innerHTML = msg.accuracy;
+        });
+    </script>
+</head>
+<body>
+    <h1>Flask-SocketIO Test</h1>
+    <table id="test">
+        <!-- <thead>Infos</thead> -->
+        <tbody>
+            <tr>
+                <th>Prediction</th>
+                <th>Accuracy</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
