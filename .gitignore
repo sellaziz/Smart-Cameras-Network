@@ -2,3 +2,4 @@
 *.mp4
 *.png
 *.jpg
+.vscode/c_cpp_properties.json

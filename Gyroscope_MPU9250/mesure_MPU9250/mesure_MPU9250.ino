@@ -1,20 +1,20 @@
 /**
- * @file mesure_MPU9250.ino
- * @author Zijie NING (zijie.ning@imt-atlantique.net)
- * @version 3.0
- * @date 2021-12-02
- *
- * Arduino library "MPU9250" by hideakitai (https://github.com/hideakitai/MPU9250)
- *
- * Control gyroscope MPU9250 with calibration.
- * Type '1' to save data via serial port.
- *
- */
+   @file mesure_MPU9250.ino
+   @author Zijie NING (zijie.ning@imt-atlantique.net)
+   @version 3.1
+   @date 2021-12-02
+
+   Arduino library "MPU9250" by hideakitai (https://github.com/hideakitai/MPU9250)
+
+   Control gyroscope MPU9250 with calibration.
+   Type '1' to save data via serial port.
+
+*/
 
 #include "MPU9250.h"
 
 MPU9250 mpu;
-int count = 1;
+int count = 0;
 char command;
 
 void setup()
@@ -33,41 +33,44 @@ void setup()
   }
 
   // calibrate anytime you want to
-  Serial.println("Accel Gyro calibration will start in 3sec.");
+  Serial.println("Accel Gyro calibration will start in 5sec.");
   Serial.println("Please leave the device still on the flat plane.");
   mpu.verbose(true);
-  delay(3000);
+  delay(5000);
   mpu.calibrateAccelGyro();
 
-  // Serial.println("Mag calibration will start in 5sec.");
-  // Serial.println("Please Wave device in a figure eight until done.");
-  // delay(5000);
-  // mpu.calibrateMag();
+  Serial.println("Mag calibration will start in 5sec.");
+  Serial.println("Please Wave device in a figure eight until done.");
+  delay(5000);
+  mpu.calibrateMag();
 
   print_calibration();
   mpu.verbose(false);
 
   Serial.println("Ready to go !");
-  Serial.println("Test Yaw Pitch Roll");
+  Serial.print("Test Yaw Pitch Roll");
 }
 
 void loop()
 {
   mpu.update();
+
+  static uint32_t prev_ms = millis();
+  if (millis() > prev_ms + 100)
+  {
+    Serial.println("");
+    Serial.print(count);
+    print_roll_pitch_yaw();
+    prev_ms = millis();
+  }
+
   if (Serial.available() > 0)
   {
     command = Serial.read();
-    // if (mpu.update())
     if (command == '1')
     {
-      static uint32_t prev_ms = millis();
-      if (millis() > prev_ms + 25)
-      {
-        Serial.print(count);
-        print_roll_pitch_yaw();
-        prev_ms = millis();
-        count++;
-      }
+      count++;
+      Serial.print(" save");
     }
   }
   while (Serial.read() >= 0)
@@ -83,7 +86,7 @@ void print_roll_pitch_yaw()
   Serial.print(" ");
   Serial.print(mpu.getPitch(), 2);
   Serial.print(" ");
-  Serial.println(mpu.getRoll(), 2);
+  Serial.print(mpu.getRoll(), 2);
 }
 
 void print_calibration()
