@@ -1,0 +1,6 @@
+{
+    "cameras" :  [
+        "rtsp://user:mdp@ip",
+        "rtsp://user:mdp@ip"
+        ]
+}
