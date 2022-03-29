@@ -1,3 +1,6 @@
+"""
+Generate a csv file that gives you random scenes for the acquisition of your dataset depending on the input dictionary
+"""
 import random
 from math import *
 import csv

@@ -13,7 +13,7 @@ import os
 
 count = [0, 0, 0, 0, 0, 0, 0]
 
-path = "/homes/z20ning/Bureau/Local/smart_cam/data/obj_train_data"
+path = "path"
 dirs = os.listdir(path)
 for i in dirs:
     if os.path.splitext(i)[1] == ".txt":
