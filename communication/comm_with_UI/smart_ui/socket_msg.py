@@ -2,6 +2,9 @@ import socketio
 import socket
 import sys
 
+port = '9000'
+localhost = '10.29.226.123'
+
 sio = socketio.Client()
 
 def send_multiple_predictions():
@@ -32,5 +35,5 @@ def connect():
 def disconnect():
     print('disconnected from server')
 
-sio.connect('http://'+'localhost'+':' + str(5000))
+sio.connect('http://'+localhost+':' + str(port))
 # send_prediction()

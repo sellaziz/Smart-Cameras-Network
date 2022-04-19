@@ -15,6 +15,8 @@ socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
 
+port = '9000'
+localhost = '10.29.226.123'
 
 def background_thread():
     """Example of how to send server generated events to clients."""
@@ -60,4 +62,4 @@ def test_disconnect():
 
 
 if __name__ == '__main__':
-    socketio.run(app,host="YOUR_IP", port="YOUR_PORT", debug=True)
+    socketio.run(app,host=localhost, port=port, debug=True)
