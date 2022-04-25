@@ -12,7 +12,7 @@ from queue import Queue
 import socketio
 import socket
 import sys
-import comm_config
+from comm_config import read_config
 import pandas as pd
 
 hostname, host_port, host_ip, cam_id = read_config("cam.ini")
