@@ -12,8 +12,10 @@ from queue import Queue
 import socketio
 import socket
 import sys
+import comm_config
+import pandas as pd
 
-
+hostname, host_port, host_ip, cam_id = read_config("cam.ini")
 
 def parser():
     parser = argparse.ArgumentParser(description="YOLO Object Detection")
@@ -137,6 +139,17 @@ def video_capture(frame_queue, darknet_image_queue):
         darknet_image_queue.put(img_for_detect)
     cap.release()
 
+def format_pred(message):
+    df=pd.DataFrame({'cam_id': [0], 'pred_idx': [0],'prediction': ["shirt"], 'accuracy': [80]},
+                    columns=['cam_id', 'pred_idx', 'prediction', 'accuracy', 'pred_time'])
+    for pred_idx, prediction in message.items():
+        cam_id=prediction["cam_id"]
+        prediction.setdefault('pred_idx',pred_idx)
+        series = pd.Series(prediction)
+        df=df.append(series,ignore_index=True)
+    df = df.iloc[1: , :]
+    socketio.emit("update_predictions", {'cam_id': cam_id, 'pd_html': df.to_html()})
+    return df
 
 def inference(darknet_image_queue, detections_queue, fps_queue):
     while cap.isOpened():
@@ -148,10 +161,14 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
         fps_queue.put(fps)
         print("FPS: {}".format(fps))
         darknet.print_detections(detections, args.ext_output)
+        predictions=dict()
+        counter=0
         for label, confidence, bbox in detections:
-                id=0
-                sio.emit("update_prediction", {'prediction': label, 'id': id, 'accuracy': confidence})		
-		#x, y, w, h = bbox
+            id=cam_id
+            predictions.setdefault(counter, {'cam_id': cam_id, 'pred_time':dt_string, 'prediction': example_labels[pred], 'accuracy': accuracy+val})
+            counter+=1
+        sio.emit("update_predictions", {'cam_id': cam_id, 'pd_html': format_pred(predictions).to_html()})
+        		#x, y, w, h = bbox
 		#if coordinates:
 		#    print("{}: {}%    (left_x: {:.0f}   top_y:  {:.0f}   width:   {:.0f}   height:  {:.0f})".format(label, confidence, x, y, w, h))
 		#else:
@@ -195,7 +212,7 @@ if __name__ == '__main__':
     detections_queue = Queue(maxsize=1)
     fps_queue = Queue(maxsize=1)
     sio = socketio.Client()
-    sio.connect('http://'+'10.29.238.204'+':' + str(1234))
+    sio.connect('http://'+host_ip+':' + str(host_port))
     @sio.event
     def connect():
         print('connection established')

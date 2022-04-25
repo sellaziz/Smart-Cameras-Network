@@ -23,19 +23,27 @@
            cb();
         });
         socket.on('update_predictions', function(msg, cb) {
-            console.log('response received2', msg.id,  msg.prediction)
+            console.log('response received - update prediction -', msg.cam_id,  msg.prediction)
             if (cb)
                 cb();
-            var table = document.getElementById('test')
-            table.rows[parseInt(msg.id,10)+1].cells[0].innerHTML = msg.prediction;
-            table.rows[parseInt(msg.id,10)+1].cells[1].innerHTML = msg.accuracy;
+            let cam_idx = (parseInt(msg.cam_id,10)+1).toString();
+            var table_div = document.getElementById('table'.concat('', cam_idx));
+            table_div.innerHTML= 'CAMERA'.concat('', cam_idx).concat('\n',msg.pd_html);
         });
     </script>
 </head>
 <body>
     <h1>Flask-SocketIO Test</h1>
-    <table id="test">
-        <!-- <thead>Infos</thead> -->
+    <div id="table0">
+    </div>
+    <div id="table1">
+    </div>
+    <div id="table2">
+    </div>
+    <div id="table3">
+    </div>
+    <!-- <thead>Infos</thead> -->
+    <!-- <table id="test">
         <tbody>
             <tr>
                 <th>Prediction</th>
@@ -50,6 +58,6 @@
                 <td>1</td>
             </tr>
         </tbody>
-    </table>
+    </table> -->
 </body>
 </html>
