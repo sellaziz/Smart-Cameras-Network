@@ -4,6 +4,8 @@ from flask import Flask, render_template, session, request, \
 from flask_socketio import SocketIO, emit, join_room, leave_room, \
     close_room, rooms, disconnect
 import pandas as pd
+from comm_config import read_config
+
 # Set this variable to "threading", "eventlet" or "gevent" to test the
 # different async modes, or leave it set to None for the application to choose
 # the best option based on installed packages.
@@ -15,8 +17,9 @@ socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
 
-port = '9000'
-localhost = '10.29.226.123'
+# port = '9000'
+# localhost = '10.29.226.123'
+hostname, host_port, host_ip, cam_id = read_config("example.ini")
 
 def background_thread():
     """Example of how to send server generated events to clients."""
@@ -77,4 +80,4 @@ def test_disconnect():
 
 
 if __name__ == '__main__':
-    socketio.run(app,host=localhost, port=port, debug=True)
+    socketio.run(app,host=host_ip, port=host_port, debug=True)

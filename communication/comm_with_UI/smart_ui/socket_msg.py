@@ -2,9 +2,11 @@ import socketio
 import socket
 import sys
 from datetime import datetime
+from comm_config import read_config
 
-port = '9000'
-localhost = '10.29.226.123'
+hostname, host_port, host_ip, cam_id = read_config("example.ini")
+# port = '9000'
+# localhost = '10.29.226.123'
 
 sio = socketio.Client()
 
@@ -46,5 +48,5 @@ def disconnect():
     print('disconnected from server')
 
 
-sio.connect('http://'+localhost+':' + str(port))
+sio.connect('http://'+host_ip+':' + str(host_port))
 # send_prediction()
