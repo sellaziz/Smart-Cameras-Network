@@ -9,6 +9,6 @@ python-engineio
 python-socketio
 six==1.11.0
 Werkzeug==0.14.1
-pandas=1.4.2
-eventlet=0.33.0
-requests=2.27.1
+pandas
+eventlet==0.33.0
+requests==2.27.1

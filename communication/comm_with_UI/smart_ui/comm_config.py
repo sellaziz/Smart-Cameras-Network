@@ -38,4 +38,4 @@ def create_default_config(path):
 
 if __name__=="""__main__""":
     hostname, host_port, host_ip, cam_id = read_config("example.ini")
-    print(f"{hostname=}, {host_port=}, {host_ip=}, {cam_id=}")
+    # print(f"{hostname=}, {host_port=}, {host_ip=}, {cam_id=}")
