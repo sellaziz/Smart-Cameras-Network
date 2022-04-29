@@ -4,9 +4,9 @@ Flask-Session==0.3.1
 itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.1.0
-Flask-SocketIO<5.0
-python-engineio<5.0
-python-socketio<5.0
+Flask-SocketIO==5.1.2
+python-engineio==4.3.2
+python-socketio==5.6.0
 six==1.11.0
 Werkzeug==0.14.1
 pandas
